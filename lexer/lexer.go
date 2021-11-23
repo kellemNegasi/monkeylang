@@ -13,8 +13,8 @@ type Lexer struct {
 	ch           byte   // current char under examination
 }
 
-// New(): - A function that intializes Lexer object and returns a pointer to a it.
-// input: string - the raw soource code fed to the lexer.
+// New is function that intializes Lexer object and returns a pointer to a it.
+// Input: string - the raw soource code fed to the lexer.
 func new(input string) *Lexer {
 	l := &Lexer{
 		input:        input,
@@ -26,7 +26,7 @@ func new(input string) *Lexer {
 	return l
 }
 
-// readChar() Reads the next character and assigns it the ch field of Lexer.
+// Method readChar() Reads the next character and assigns it the ch field of Lexer.
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
@@ -43,13 +43,25 @@ func (l *Lexer) NextToken() token.Token {
 	l.eatWhiteSpace() // skip white spaces
 	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tok = token.Token{Type: token.EQ, Literal: string(ch) + string(l.ch)}
+		} else {
+			tok = newToken(token.ASSIGN, l.ch)
+		}
 	case '+':
 		tok = newToken(token.PLUS, l.ch)
 	case '-':
 		tok = newToken(token.MINUS, l.ch)
 	case '!':
-		tok = newToken(token.BANG, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tok = token.Token{Type: token.NOT_EQ, Literal: string(ch) + string(l.ch)}
+		} else {
+			tok = newToken(token.BANG, l.ch)
+		}
 	case '/':
 		tok = newToken(token.SLASH, l.ch)
 	case '*':
@@ -131,5 +143,14 @@ func isDigit(ch byte) bool {
 func (l *Lexer) eatWhiteSpace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
+	}
+}
+
+//peakChar looks ahead and returns the next character
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
 	}
 }

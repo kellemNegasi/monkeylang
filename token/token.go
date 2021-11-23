@@ -48,6 +48,8 @@ const (
 	SLASH    = "/"
 	LT       = "<"
 	GT       = ">"
+	EQ       = "=="
+	NOT_EQ   = "!="
 	// COMMA and other delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
