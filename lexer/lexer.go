@@ -15,7 +15,7 @@ type Lexer struct {
 
 // New is function that intializes Lexer object and returns a pointer to a it.
 // Input: string - the raw soource code fed to the lexer.
-func new(input string) *Lexer {
+func New(input string) *Lexer {
 	l := &Lexer{
 		input:        input,
 		position:     0,

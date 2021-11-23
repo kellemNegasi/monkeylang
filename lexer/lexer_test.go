@@ -117,7 +117,7 @@ func TestNextToken(t *testing.T) {
 
 		{token.EOF, ""},
 	}
-	l := new(input)
+	l := New(input)
 	for i, tt := range tests {
 		tok := l.NextToken()
 		t.Logf("type %q  litteral %q", tok.Type, tok.Literal)
