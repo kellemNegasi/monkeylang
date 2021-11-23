@@ -1,4 +1,4 @@
-// Package Lexer provides with data structures and methods for tokenization monkeylang soruce code.
+// Package lexer provides with data structures and methods for tokenization monkeylang soruce code.
 package lexer
 
 import (
@@ -37,23 +37,35 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
-// NextToken(): identifies and returns the next token
+// NextToken identifies and returns the next token
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.eatWhiteSpace() // skip white spaces
 	switch l.ch {
 	case '=':
 		tok = newToken(token.ASSIGN, l.ch)
+	case '+':
+		tok = newToken(token.PLUS, l.ch)
+	case '-':
+		tok = newToken(token.MINUS, l.ch)
+	case '!':
+		tok = newToken(token.BANG, l.ch)
+	case '/':
+		tok = newToken(token.SLASH, l.ch)
+	case '*':
+		tok = newToken(token.ASTERISK, l.ch)
+	case '<':
+		tok = newToken(token.LT, l.ch)
+	case '>':
+		tok = newToken(token.GT, l.ch)
 	case ';':
 		tok = newToken(token.SEMICOLON, l.ch)
+	case ',':
+		tok = newToken(token.COMMA, l.ch)
 	case '(':
 		tok = newToken(token.LPAREN, l.ch)
 	case ')':
 		tok = newToken(token.RPAREN, l.ch)
-	case ',':
-		tok = newToken(token.COMMA, l.ch)
-	case '+':
-		tok = newToken(token.PLUS, l.ch)
 	case '{':
 		tok = newToken(token.LBRACE, l.ch)
 	case '}':
@@ -85,7 +97,7 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 }
 
 // readIdentifier() reads and returns a given identifier.
-// When a given character is identified as a letter then it keeps scanning untill there is no letter anymore.
+// When a given character is identified as a letter then it keeps scanning until there is no letter anymore.
 
 func (l *Lexer) readIdentifier() string {
 	position := l.position
