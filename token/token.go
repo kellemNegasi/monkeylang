@@ -31,13 +31,16 @@ func LookupIdent(ident string) TokenType {
 	return IDENT
 }
 
+// Defenitions of Token names.
 const (
-	// ILLEGAL AND EOF defines ILLEGAL and EOF
+	// ILLEGAL defines an illegal token.
 	ILLEGAL = "ILLEGAL"
-	EOF     = "EOF"
-	// IDENT and INT identifiers and literals
+	// EOF defines an end of file token.
+	EOF = "EOF"
+	// IDENT and INT identifiers and literals.
 	IDENT = "IDENT" // variables and function names
-	INT   = "INT"   // integers (123456789)
+	// INT token represents integre variables i.e 123456789.
+	INT = "INT"
 
 	// ASSIGN and other operators
 	ASSIGN   = "="
@@ -49,7 +52,7 @@ const (
 	LT       = "<"
 	GT       = ">"
 	EQ       = "=="
-	NOT_EQ   = "!="
+	NOTEQ    = "!="
 	// COMMA and other delimiters
 	COMMA     = ","
 	SEMICOLON = ";"

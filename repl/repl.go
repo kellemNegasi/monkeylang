@@ -1,3 +1,4 @@
+// Package repl contains utilities for interactive console or ReadPrintLoop(repl).
 package repl
 
 import (
@@ -10,8 +11,10 @@ import (
 	"github.com/kellemNegasi/monkeylang/lexer"
 )
 
+// PROMPT defines an entry point that prompts the user to enter input.
 const PROMPT = ">>"
 
+// Start starts the repl.
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 
