@@ -11,7 +11,7 @@ type Node interface {
 // Statement defines the Statement node interface.
 type Statement interface {
 	Node
-	statmentNode()
+	statementNode()
 }
 
 // Expression defines an Expression node.
@@ -47,7 +47,7 @@ type LetStatement struct {
 	Value *Expression
 }
 
-func (letStmnt *LetStatement) statmentNode() {
+func (letStmnt *LetStatement) statementNode() {
 }
 
 //TokenLiteral returns the literal value of the Token field of the LetStatment.
