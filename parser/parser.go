@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/kellemNegasi/monkeylang/ast"
 	"github.com/kellemNegasi/monkeylang/lexer"
 	"github.com/kellemNegasi/monkeylang/token"
@@ -11,17 +13,24 @@ type Parser struct {
 	lexer        *lexer.Lexer
 	currentToken token.Token
 	peekToken    token.Token
+	errors       []string // for holding the errors.
 }
 
 // New initializes a Parser.
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
-		lexer: l,
+		lexer:  l,
+		errors: []string{},
 	}
 	// warm start the parser with two tokens i.e one for currentToken and the next for peekToken.
 	p.nextToken()
 	p.nextToken()
 	return p
+}
+
+// Errors returns the parser errors.
+func (p *Parser) Errors() []string {
+	return p.errors
 }
 
 // nextToken gets the imediate next token in program.
@@ -89,5 +98,13 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 		p.nextToken()
 		return true
 	}
+	p.peekError(t)
 	return false
+}
+
+// peekError adds an error to errors when the type of peekToken doesn’t match the expectation.
+func (p *Parser) peekError(t token.TokenType) {
+	msg := fmt.Sprintf("expected next token to be %s, got %s instead",
+		t, p.peekToken.Type)
+	p.errors = append(p.errors, msg)
 }
