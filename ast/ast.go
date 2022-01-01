@@ -22,13 +22,13 @@ type Expression interface {
 
 // Program defines a type that represents source code program which is made up of one or more statments.
 type Program struct {
-	Statement []Statement
+	Statements []Statement
 }
 
 // TokenLiteral is a method that returns the litral value of the token the node is associated with.
 func (p *Program) TokenLiteral() string {
-	if len(p.Statement) > 0 {
-		return p.Statement[0].TokenLiteral()
+	if len(p.Statements) > 0 {
+		return p.Statements[0].TokenLiteral()
 	}
 
 	return ""
@@ -54,9 +54,13 @@ func (letStmnt *LetStatement) statmentNode() {
 func (letStmnt *LetStatement) TokenLiteral() string {
 	return letStmnt.Token.Literal
 }
+
+// ExpressionNode makes Identifier implement the Expression interface.
 func (id *Identifier) ExpressionNode() {
 
 }
+
+// TokenLiteral method of Identifier makes it implement the Node interface.
 func (id *Identifier) TokenLiteral() string {
 	return id.Token.Literal
 }
