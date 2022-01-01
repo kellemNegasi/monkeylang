@@ -1,12 +1,14 @@
 // Package ast defines functions and data structures to build an Abstract Syntax Tree for parsing a source code.
 package ast
 
+import "github.com/kellemNegasi/monkeylang/token"
+
 // Node defines the basic node interface that represents any kind of node in the AST.
 type Node interface {
 	TokenLiteral() string
 }
 
-// Statement defines the Statment node interface.
+// Statement defines the Statement node interface.
 type Statement interface {
 	Node
 	statmentNode()
@@ -30,4 +32,31 @@ func (p *Program) TokenLiteral() string {
 	}
 
 	return ""
+}
+
+// Identifier represents identifier type.
+type Identifier struct {
+	Token token.Token
+	Value string
+}
+
+// LetStatement represents a node for let statment binding.
+type LetStatement struct {
+	Token token.Token
+	Name  *Identifier
+	Value *Expression
+}
+
+func (letStmnt *LetStatement) statmentNode() {
+}
+
+//TokenLiteral returns the literal value of the Token field of the LetStatment.
+func (letStmnt *LetStatement) TokenLiteral() string {
+	return letStmnt.Token.Literal
+}
+func (id *Identifier) ExpressionNode() {
+
+}
+func (id *Identifier) TokenLiteral() string {
+	return id.Token.Literal
 }
