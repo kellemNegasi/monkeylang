@@ -20,7 +20,7 @@ type Expression interface {
 	ExpressionNode()
 }
 
-// Program defines a type that represents source code program which is made up of one or more statments.
+// Program defines a type that represents source code program which is made up of one or more statements.
 type Program struct {
 	Statements []Statement
 }
@@ -40,7 +40,7 @@ type Identifier struct {
 	Value string
 }
 
-// LetStatement represents a node for let statment binding.
+// LetStatement represents a node for let statement binding.
 type LetStatement struct {
 	Token token.Token
 	Name  *Identifier
@@ -50,7 +50,7 @@ type LetStatement struct {
 func (letStmnt *LetStatement) statementNode() {
 }
 
-//TokenLiteral returns the literal value of the Token field of the LetStatment.
+//TokenLiteral returns the literal value of the Token field of the LetStatement.
 func (letStmnt *LetStatement) TokenLiteral() string {
 	return letStmnt.Token.Literal
 }
