@@ -64,3 +64,16 @@ func (id *Identifier) ExpressionNode() {
 func (id *Identifier) TokenLiteral() string {
 	return id.Token.Literal
 }
+
+type ReturnStatement struct {
+	Token       token.Token // the `return` token is represented here.
+	ReturnValue Expression
+}
+
+// statementNode implements the Statement interface
+func (retStatement *ReturnStatement) statementNode() {}
+
+// TokenLiteral returns the literal value of retStatement.Token attribute.
+func (retStatement *ReturnStatement) TokenLiteral() string {
+	return retStatement.Token.Literal
+}

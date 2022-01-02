@@ -57,14 +57,16 @@ func (p *Parser) ParseProgram() *ast.Program {
 func (p *Parser) ParseStatment() ast.Statement {
 	switch p.currentToken.Type {
 	case token.LET:
-		return p.ParseLetStatment()
+		return p.ParseLetStatement()
+	case token.RETURN:
+		return p.ParseReturnStatement()
 	default:
 		return nil
 	}
 }
 
 // ParseLetStatment is a specific statment parser that is dedicated to parsing a `let` statment.
-func (p *Parser) ParseLetStatment() *ast.LetStatement {
+func (p *Parser) ParseLetStatement() *ast.LetStatement {
 	statement := &ast.LetStatement{Token: p.currentToken}
 	// after the `let` keyword check the next token's type is an Identifier
 	if !p.expectPeek(token.IDENT) {
@@ -107,4 +109,15 @@ func (p *Parser) peekError(t token.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %s, got %s instead",
 		t, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
+}
+func (p *Parser) ParseReturnStatement() *ast.ReturnStatement {
+	statement := &ast.ReturnStatement{Token: p.currentToken}
+	p.nextToken()
+
+	// TODO: We're skipping the expression parsing
+
+	for !p.curTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+	return statement
 }
