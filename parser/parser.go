@@ -8,12 +8,25 @@ import (
 	"github.com/kellemNegasi/monkeylang/token"
 )
 
+const (
+	_ int = iota
+	LOWEST
+	EQUALS      // ==
+	LESSGREATER // > or <
+	SUM         // +
+	PRODUCT     // *
+	PREFIX      // -X or !X
+	CALL        // myFunction(X)
+)
+
 // Parser reprsents the parser object.
 type Parser struct {
-	lexer        *lexer.Lexer
-	currentToken token.Token
-	peekToken    token.Token
-	errors       []string // for holding the errors.
+	lexer          *lexer.Lexer
+	currentToken   token.Token
+	peekToken      token.Token
+	errors         []string // for holding the errors.
+	prefixParseFns map[token.TokenType]prefixParserFn
+	infixParseFns  map[token.TokenType]infixParserFn
 }
 
 // New initializes a Parser.
@@ -25,7 +38,16 @@ func New(l *lexer.Lexer) *Parser {
 	// warm start the parser with two tokens i.e one for currentToken and the next for peekToken.
 	p.nextToken()
 	p.nextToken()
+	// associate tokens with corrosponding parsing functions.
+	p.prefixParseFns = make(map[token.TokenType]prefixParserFn)
+	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	return p
+}
+
+// parseIdentifier parses an indentifier and returns Identifier object.
+
+func (p *Parser) parseIdentifier() ast.Expression {
+	return &ast.Identifier{Token: p.currentToken, Value: p.currentToken.Literal}
 }
 
 // Errors returns the parser errors.
@@ -61,7 +83,7 @@ func (p *Parser) ParseStatment() ast.Statement {
 	case token.RETURN:
 		return p.ParseReturnStatement()
 	default:
-		return nil
+		return p.parseExpressionStatement()
 	}
 }
 
@@ -120,4 +142,34 @@ func (p *Parser) ParseReturnStatement() *ast.ReturnStatement {
 		p.nextToken()
 	}
 	return statement
+}
+
+type prefixParserFn func() ast.Expression
+
+type infixParserFn func(ast.Expression) ast.Expression
+
+func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParserFn) {
+	p.prefixParseFns[tokenType] = fn
+}
+func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParserFn) {
+	p.infixParseFns[tokenType] = fn
+}
+
+func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	statement := &ast.ExpressionStatement{Token: p.currentToken}
+	statement.Expression = p.ParseExpression(LOWEST)
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+	return statement
+}
+
+// parseEXpression parses a given expression and returns the left expression given an operator.
+func (p *Parser) ParseExpression(precedense int) ast.Expression {
+	prefix := p.prefixParseFns[p.currentToken.Type]
+	if prefix == nil {
+		return nil
+	}
+	leftExp := prefix()
+	return leftExp
 }

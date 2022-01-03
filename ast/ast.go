@@ -1,11 +1,16 @@
 // Package ast defines functions and data structures to build an Abstract Syntax Tree for parsing a source code.
 package ast
 
-import "github.com/kellemNegasi/monkeylang/token"
+import (
+	"bytes"
+
+	"github.com/kellemNegasi/monkeylang/token"
+)
 
 // Node defines the basic node interface that represents any kind of node in the AST.
 type Node interface {
 	TokenLiteral() string
+	String() string
 }
 
 // Statement defines the Statement node interface.
@@ -44,7 +49,7 @@ type Identifier struct {
 type LetStatement struct {
 	Token token.Token
 	Name  *Identifier
-	Value *Expression
+	Value Expression
 }
 
 func (letStmnt *LetStatement) statementNode() {
@@ -77,3 +82,57 @@ func (retStatement *ReturnStatement) statementNode() {}
 func (retStatement *ReturnStatement) TokenLiteral() string {
 	return retStatement.Token.Literal
 }
+
+type ExpressionStatement struct {
+	Token      token.Token // this holds the first tokne of the expression
+	Expression Expression
+}
+
+// statementNode implements the Statement interface.
+func (exp *ExpressionStatement) statementNode() {
+}
+
+func (expStmt *ExpressionStatement) TokenLiteral() string {
+	return expStmt.Token.Literal
+}
+
+// String implements the Node interface
+
+func (i *Identifier) String() string { return i.Value }
+
+func (es *ExpressionStatement) String() string {
+	if es.Expression != nil {
+		return es.Expression.String()
+	}
+	return ""
+}
+func (rs *ReturnStatement) String() string {
+	var out bytes.Buffer
+	out.WriteString(rs.TokenLiteral() + " ")
+	if rs.ReturnValue != nil {
+		out.WriteString(rs.ReturnValue.String())
+	}
+	out.WriteString(";")
+	return out.String()
+}
+
+func (ls *LetStatement) String() string {
+	var out bytes.Buffer
+	out.WriteString(ls.TokenLiteral() + " ")
+	out.WriteString(ls.Name.String())
+	out.WriteString(" = ")
+	if ls.Value != nil {
+		out.WriteString(ls.Value.String())
+	}
+	out.WriteString(";")
+	return out.String()
+}
+func (p *Program) String() string {
+	var out bytes.Buffer
+	for _, s := range p.Statements {
+		out.WriteString(s.String())
+	}
+	return out.String()
+}
+
+
