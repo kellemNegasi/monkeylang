@@ -61,6 +61,15 @@ type LetStatement struct {
 	Value Expression
 }
 
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
+}
+
+func (il *IntegerLiteral) ExpressionNode()      {}
+func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
+func (il *IntegerLiteral) String() string       { return il.Token.Literal }
+
 func (letStmnt *LetStatement) statementNode() {}
 
 //TokenLiteral returns the literal value of the Token field of the LetStatement.
