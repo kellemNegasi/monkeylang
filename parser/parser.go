@@ -115,7 +115,7 @@ func (p *Parser) ParseReturnStatement() *ast.ReturnStatement {
 	p.nextToken()
 
 	// TODO: We're skipping the expression parsing
-
+	// If not a semicolon get the next token.
 	for !p.curTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
